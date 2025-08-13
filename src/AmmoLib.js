@@ -3,7 +3,11 @@
 import * as THREE from "three";
 import { ConvexHull } from "../node_modules/three/examples/jsm/math/ConvexHull";
 
+import ammo from "ammo.js";
+
+
 // const _Ammo = await ();
+// const Ammo = await ammo.bind(window)();
 let Ammo = null;
 let rayOrigin = null;
 let rayDest = null;
@@ -58,11 +62,28 @@ function createConvexGeom(object) {
   return geom;
 }
 
-async function loadAmmo() {
-  const AmmoLib = await import("ammo.js");
- const  Ammo = await AmmoLib.default();
-  return Ammo;
-}
+
+// const loadScriptAsync = (url) => {
+//     return new Promise((resolve, reject) => {
+//         const tag = document.createElement("script");
+//         tag.onload = () => resolve();
+//         tag.onerror = () => reject(new Error(`Failed to load ${url}`));
+//         tag.async = true;
+//         tag.src = url;
+//         document.head.appendChild(tag);
+//     });
+// };
+
+// async function loadAmmo() {
+//    await loadScriptAsync("public/ammo.js"); // e.g. public/ammo/ammo.js
+
+//     // When loaded as a script, Ammo will be available on window.Ammo
+
+//    Ammo= window.Ammo
+
+//    console.log(window.Ammo)
+//     return window.Ammo;
+// }
 
 class AmmoHelper {
   static async Init(callback = () => {}) {
@@ -77,21 +98,32 @@ class AmmoHelper {
     
     // const _Ammo = await import("ammo.js"); // dynamically load module
     // Ammo = await _Ammo.default();
-    // callback();
+
+    const _Ammo = await ammo.bind(window)();
+
+    Ammo = _Ammo
+    callback();
+
+
+
 
 
     //   _Ammo().then((ammo)=>{
     //     Ammo = ammo;
+
+
     //     callback();
     // });
 
-    loadAmmo().then(ammo => {
-  console.log("Ammo ready");
+    // loadAmmo()
 
-  Ammo = ammo
+//     loadAmmo().then(ammo => {
+//   console.log("Ammo ready");
+
+//   Ammo = ammo
 
   
-});
+// });
 
     //     const AmmoModule = (await import("ammo.js")).default; // get the factory function
     // a = await AmmoModule(); // run it to get a mutable instance
