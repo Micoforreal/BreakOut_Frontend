@@ -7,9 +7,9 @@ plugins:[wasm() , topLevelAwait(),   tailwindcss(),],
  build: {
         sourcemap: true,
     },
-    ssr: {
-    noExternal: ['ammo.js'] 
-  },
+  //   ssr: {
+  // //   noExternal: ['ammo.js'] 
+  // // },
 
     
    assetsInclude: [
