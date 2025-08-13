@@ -1,6 +1,6 @@
 import React from "react";
 import GameMenu from "./gameMenu";
-import SolanaWalletProvider from "./WalletApp";
+import SolanaWalletProvider from "./walletApp";
 import { UserContextProvider } from "./context/userContext";
 
 function ReactApp( ) {
