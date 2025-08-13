@@ -157,7 +157,14 @@ const GameMenu = () => {
         </div>
       ) : (
         <>
-           {" "}
+        <div className="flex-col m-auto justify-center items-center">
+         <h2 className="my-10 text-lg font-bold">CONNECT WALLET TO START GAME</h2>
+         
+         <WalletMultiButton
+                style={{ backgroundColor: "", borderRadius: "20px" }}
+                class="md:text-lg"
+              />
+        </div>
         </>
       )}
     </>

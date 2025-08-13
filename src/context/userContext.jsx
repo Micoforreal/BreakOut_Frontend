@@ -24,7 +24,7 @@ export const UserContextProvider = ({ children }) => {
           if (response === "No user found") {
             setShowProfilModal(true);
           } else {
-            setUserData(response);
+            // setUserData(response);
             // const res = await addAchievement(response[0].userAddress, 10);
 
           //  const res = await createCharacter()

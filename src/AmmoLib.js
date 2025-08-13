@@ -63,41 +63,10 @@ function createConvexGeom(object) {
 }
 
 
-// const loadScriptAsync = (url) => {
-//     return new Promise((resolve, reject) => {
-//         const tag = document.createElement("script");
-//         tag.onload = () => resolve();
-//         tag.onerror = () => reject(new Error(`Failed to load ${url}`));
-//         tag.async = true;
-//         tag.src = url;
-//         document.head.appendChild(tag);
-//     });
-// };
-
-// async function loadAmmo() {
-//    await loadScriptAsync("public/ammo.js"); // e.g. public/ammo/ammo.js
-
-//     // When loaded as a script, Ammo will be available on window.Ammo
-
-//    Ammo= window.Ammo
-
-//    console.log(window.Ammo)
-//     return window.Ammo;
-// }
-
 class AmmoHelper {
   static async Init(callback = () => {}) {
 
 
-    //    if (typeof window === "undefined") {
-    //   // On Vercel's server side, just skip
-    //   return;
-    // }
-
-
-    
-    // const _Ammo = await import("ammo.js"); // dynamically load module
-    // Ammo = await _Ammo.default();
 
     const _Ammo = await ammo.bind(window)();
 
@@ -108,28 +77,8 @@ class AmmoHelper {
 
 
 
-    //   _Ammo().then((ammo)=>{
-    //     Ammo = ammo;
 
 
-    //     callback();
-    // });
-
-    // loadAmmo()
-
-//     loadAmmo().then(ammo => {
-//   console.log("Ammo ready");
-
-//   Ammo = ammo
-
-  
-// });
-
-    //     const AmmoModule = (await import("ammo.js")).default; // get the factory function
-    // a = await AmmoModule(); // run it to get a mutable instance
-   // store this instead of the frozen module
-
-    callback();
   }
 
   static CreateTrigger(shape, position, rotation) {
