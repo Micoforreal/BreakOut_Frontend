@@ -67,7 +67,7 @@ import PlayerHealth from "./entities/Player/PlayerHealth";
 import menuMusicFile from './assets/sounds/menuMusic.mp3';
 
 
-class FPSGameApp {
+  export class FPSGameApp {
   constructor() {
     this.lastFrameTime = null;
     this.assets = {};
@@ -171,9 +171,9 @@ class FPSGameApp {
   }
 
   SetupStartButton() {
-    document
-      .getElementById("start_game")
-      .addEventListener("click", this.StartGame);
+    // document
+    //   .getElementById("start_game")
+    //   .addEventListener("click", this.StartGame);
   }
 
   ShowMenu(visible = true) {
@@ -183,8 +183,7 @@ class FPSGameApp {
 
 
 
-      
-
+      document.addEventListener("click", () => {
     if (!this.menuMusic) {
       this.menuMusic =  new THREE.Audio(this.listener);
       this.menuMusic.setBuffer(this.assets['menuMusic']);
@@ -193,10 +192,11 @@ class FPSGameApp {
       this.menuMusic.play();
       this.menuMusic.isPlaying = true;
     }
+  })
   
   }
 
-  
+
   async LoadAssets() {
     const gltfLoader = new GLTFLoader();
     const fbxLoader = new FBXLoader();
@@ -432,7 +432,7 @@ class FPSGameApp {
   }
 }
 
-let _APP = null;
+export let _APP = null;
 window.addEventListener("DOMContentLoaded", () => {
   _APP = new FPSGameApp();
 });

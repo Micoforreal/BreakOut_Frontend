@@ -4,7 +4,7 @@ import { client } from "./constants";
 
 
 
-const wallet = {}
+// const wallet = {}
 
 
 

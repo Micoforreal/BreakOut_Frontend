@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import WalletApp from "./WalletApp.jsx";
 
-const root = ReactDOM.createRoot(document.getElementById("wallet-root"));
-root.render(<WalletApp />);
+import ReactApp from "./reactApp.jsx";
+
+const root = ReactDOM.createRoot(document.getElementById("menu"));
+root.render(<ReactApp />);

@@ -9,7 +9,10 @@
       href="https://fonts.googleapis.com/css2?family=Libre+Barcode+39+Text&family=Roboto:wght@400;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
 
     <link href="/src/index.css" rel="stylesheet" />
 
@@ -75,9 +78,9 @@
         visibility: hidden;
       }
       h1 {
-        font-family: "Libre Barcode 39 Text", cursive;
+        /* font-family: "Libre Barcode 39 Text", cursive; */
         font-size: 4em;
-      }
+        }
       /* button{
         background-color: rgba(0,0,0,0);
         color: rgb(221, 221, 221);
@@ -133,15 +136,11 @@
   <body>
     <script src="src/main.js" type="module"></script>
 
-
-    <script src="src/ui.js" type="module"></script>
+    <!-- <script src="src/ui.js" type="module"></script> -->
     <script type="module" src="src/wallet-main.jsx"></script>
-    
 
     <div id="menu" class="">
-
-
-      <div
+      <!-- <div
         class="fixed inset-0 z-50 hidden place-content-center bg-black/50 p-4"
         role="dialog"
         id="noticeModal"
@@ -165,7 +164,6 @@
             </p>
           </div>
           <button
-        
             type="button"
             id="closeModalBtn"
             class="border-amber-400 border mt-4 rounded-lg p-2 text-gray-200 transition-colors hover:bg-gray-50 hover:text-gray-600 focus:outline-none"
@@ -176,47 +174,22 @@
         </div>
       </div>
 
-
-
-
-
-      <div id="debug"></div>
-      <div class=" w-[93%] ms-auto   flex justify-d  items-center">
-        <div class="w-[80%] " id="userData">
-
-          <div class="border-2 border-amber-100 h-10 w-10 rounded-full ms-2"></div>
-        </div>
-
-        <div class="-w-full" id="wallet-root"></div>
-      </div>
-
-
-      <div id="userLevel" class="flex gap-14 flex-wrap w-[80%] justify-center m-auto"></div>
-
       
+      <div
+        id="userLevel"
+        class="flex gap-14 flex-wrap w-[80%] justify-center m-auto"
+      ></div>
+
       <div class="flex mt-auto justify-between items-center">
-        <button id="start_game" class="ms-7 md:px-7 py-2 px-4">
-          START GAME
-        </button>
+        <button id="" class="ms-7 md:px-10 py-2 px-4 bg-gray-200 text-blue-950 rounded-lg ">Store</button>
 
-
-            <!-- <button
-         id="createAccountBtn"
-         onclick="createAccount()"
        
-            class="border-amber-400 border mt-4 rounded-lg p-2 text-gray-200 transition-colors hover:bg-gray-50 hover:text-gray-600 focus:outline-none"
-       
-          >
-            Ok
-          </button> -->
-
-          
 
         <h1 class="mx-auto border-">OutBreak</h1>
         <button id="start_game" class="ms-a me-7 md:px-7 py-2 px-4">
           START GAME
         </button>
-      </div>
+      </div> -->
     </div>
     <div id="game_hud">
       <img id="crosshair" src="./src/ui/crosshair.png" />

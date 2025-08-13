@@ -1,15 +1,16 @@
-import { client } from "../utils/constants";
+import { ADMIN_PUBLIC_KEY, client, PROJECT_ADDRESS } from "../utils/constants";
 import { signAndSendTransaction } from "../utils/transaction";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
 
-export const createAccount = async ({ fullName }) => {
+export const createAccount = async ({ fullName, user }) => {
+    try {
   const {
     createNewUserWithProfileTransaction: txResponse, // This is the transaction response, you'll need to sign and send this transaction
   } = await client.createNewUserWithProfileTransaction({
-    project: projectAddress.toString(),
-    wallet: userPublicKey.toString(),
-    payer: adminPublicKey.toString(),
+    project: PROJECT_ADDRESS,
+    wallet: user.toString(),
+    payer: ADMIN_PUBLIC_KEY ,
     profileIdentity: "main",
     userInfo: {
       name: fullName,
@@ -18,9 +19,10 @@ export const createAccount = async ({ fullName }) => {
     },
   });
 
-  signAndSendTransaction(txResponse)
-    .then((txid) => {
-      Toastify({
+
+    const response = await   signAndSendTransaction(txResponse)
+   
+    Toastify({
         text: "Account created successfully!",
         duration: 3000,
 
@@ -36,9 +38,15 @@ export const createAccount = async ({ fullName }) => {
           background: "linear-gradient(to right, #00b09b, #96c93d)",
         },
       }).showToast();
-    })
-    .catch((error) => {
-      Toastify({
+
+
+    console.log("Transaction response:", response);
+      return response
+
+  } catch (error) {
+
+    console.error("Error creating account:", error);
+    Toastify({
         text: "something went wrong! please try again ",
         duration: 3000,
 
@@ -54,5 +62,19 @@ export const createAccount = async ({ fullName }) => {
           background: "linear-gradient(to right,#BA0104, #D35763)",
         },
       }).showToast();
-    });
+
+    
+  }
+
+  
+      
+    
+    
 };
+
+
+
+
+export const getUserProfile = async (userPublicKey) => {
+
+}

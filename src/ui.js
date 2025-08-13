@@ -17,8 +17,10 @@ const CreateAccountBtn = document.getElementById("createAccountBtn");
 const userDataDiv = document.getElementById("userData");
 
 const userLevelDiv = document.getElementById("userLevel");
+const buttons = document.querySelectorAll(".btn_level");
 
-let selectedLevel = 0;
+let selectedLevel = null;
+let selectedButton = null;
 
 async function getUserDataFromDB() {
   return userData;
@@ -32,6 +34,7 @@ selectedLevel = userData[0].currentLevel;
 
 async function displayUserData() {
   const userData = await getUserDataFromDB();
+  const userLevel = userData[0].level;
 
   // Clear old content
   userDataDiv.innerHTML = "";
@@ -61,37 +64,65 @@ async function displayUserData() {
   levelData.map((item) => {
     const div = document.createElement("div");
 
-    div.innerHTML = `
+    const isUnlocked = userLevel >= item.level;
 
-    
-    <div class=" block ">
-    ${
-      userData[0].level >= item.level
-        ? `
-      <div class=" border-2 rounded-lg px-7 text-[60px] font-bold text-gray-300 font-serif">
-      ${item.level}
-      </div>
-      `
-        : `
-      <div class=" border-2 rounded-lg px-7 text-[60px] font-bold text-gray-300 font-serif">
-      <i class="fa-solid fa-lock"></i>
-     
-  
-      </div>
-      `
+    div.innerHTML = `
+  <div class="block">
+     <button 
+        class="level_btn  border-2 rounded-lg px-7 text-[60px] font-bold text-gray-300 font-serif transition-colors duration-200" 
+        ${!isUnlocked ? "disabled" : ""}
+        value="${item.level}"
+      >
+        ${isUnlocked ? item.level : `<i class="fa-solid fa-lock"></i>`}
+      </button>
+  </div>
+`;
+
+    const btn = div.querySelector(".level_btn");
+    const preselectedBtn = document.querySelector(
+      `button[value="${selectedLevel}"]`
+    );
+    if (preselectedBtn) {
+      preselectedBtn.classList.add("border-orange-500");
+      selectedButton = preselectedBtn;
     }
-   
-    </div>
-    
-    `;
+
+
+    if (isUnlocked) {
+      btn.addEventListener("click", () => {
+        // Remove orange border from previous selection
+        if (selectedButton) {
+          selectedButton.classList.remove("border-orange-500");
+        }
+
+        // Mark new selection
+        btn.classList.add("border-orange-500");
+        selectedButton = btn;
+        selectedLevel = selectedButton.value; // Update the selected level
+      });
+    }
 
     userLevelDiv.appendChild(div);
   });
 }
 
+buttons.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    // Remove 'active' from all
+    buttons.forEach((b) => b.classList.remove("active"));
+
+    // Add 'active' to the clicked button
+    btn.classList.add("active");
+
+    // Store the selected value (like React's state)
+    const selected = btn.textContent;
+    console.log("Selected:", selected);
+  });
+});
+
 window.addEventListener("DOMContentLoaded", () => {
   //   const modal = document.getElementById("noticeModal");
-  displayUserData();
+  // displayUserData();
 
   // Show immediately
   //   modal.classList.remove("hidden");
