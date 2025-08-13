@@ -8,9 +8,9 @@ plugins:[wasm() , topLevelAwait(),   tailwindcss(), react()],
  build: {
         sourcemap: true,
 
-          rollupOptions: {
-      external: ['ammo.js'],
-    }
+    // rollupOptions: {
+    //   external: ['ammo.js'],
+    // }
     },
  
     
