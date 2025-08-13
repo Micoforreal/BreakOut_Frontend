@@ -1,11 +1,3 @@
-/**
- * entry.js
- *
- * This is the first file loaded. It sets up the Renderer,
- * Scene, Physics and Entities. It also starts the render loop and
- * handles window resizes.
- *
- */
 
 import * as THREE from "three";
 import { AmmoHelper, Ammo, createConvexHullShape } from "./AmmoLib";

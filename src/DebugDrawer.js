@@ -1,14 +1,3 @@
-/**
- * @author       Yannick Deubel (https://github.com/yandeu)
- * @copyright    Copyright (c) 2020 Yannick Deubel; Project Url: https://github.com/enable3d/enable3d
- * @description  This is a modified version of the original code from Kevin Lee
- */
-
-/**
- * @author       Kevin Lee (https://github.com/InfiniteLee)
- * @copyright    Copyright (c) 2019 Kevin Lee; Project Url: https://github.com/InfiniteLee/ammo-debug-drawer
- * @license      {@link https://github.com/InfiniteLee/ammo-debug-drawer/blob/master/LICENSE|MPL-2.0}
- */
 
  import { BufferAttribute, BufferGeometry, LineBasicMaterial, LineSegments, Scene, StaticDrawUsage } from 'three'
 

@@ -1,4 +1,5 @@
 // import * as _Ammo from "ammo.js"
+
 import * as THREE from "three";
 import { ConvexHull } from "../node_modules/three/examples/jsm/math/ConvexHull";
 
@@ -59,8 +60,29 @@ function createConvexGeom(object) {
 
 class AmmoHelper {
   static async Init(callback = () => {}) {
+
+
+       if (typeof window === "undefined") {
+      // On Vercel's server side, just skip
+      return;
+    }
+
+
+    
     const _Ammo = await import("ammo.js"); // dynamically load module
     Ammo = await _Ammo.default();
+    callback();
+
+    //   _Ammo().then((ammo)=>{
+    //     Ammo = ammo;
+    //     callback();
+    // });
+
+
+    //     const AmmoModule = (await import("ammo.js")).default; // get the factory function
+    // a = await AmmoModule(); // run it to get a mutable instance
+   // store this instead of the frozen module
+
     callback();
   }
 
