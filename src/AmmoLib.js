@@ -60,7 +60,7 @@ function createConvexGeom(object) {
 
 async function loadAmmo() {
   const AmmoLib = await import("ammo.js");
-   Ammo = await AmmoLib.default();
+ const  Ammo = await AmmoLib.default();
   return Ammo;
 }
 
@@ -85,8 +85,12 @@ class AmmoHelper {
     //     callback();
     // });
 
-    loadAmmo().then(Ammo => {
+    loadAmmo().then(ammo => {
   console.log("Ammo ready");
+
+  Ammo = ammo
+
+  
 });
 
     //     const AmmoModule = (await import("ammo.js")).default; // get the factory function
