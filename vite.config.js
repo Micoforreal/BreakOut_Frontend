@@ -6,6 +6,10 @@ export default defineConfig({
 plugins:[wasm() , topLevelAwait(),   tailwindcss(),],
  build: {
         sourcemap: true,
+
+          rollupOptions: {
+      external: ['ammo.js'],
+    }
     },
   //   ssr: {
   // //   noExternal: ['ammo.js'] 
