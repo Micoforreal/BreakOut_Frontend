@@ -18,6 +18,7 @@
     "@solana/web3.js": "^1.98.4",
     "@tailwindcss/vite": "^4.1.11",
     "@types/ammo.js": "github:osman-turan/ammo.js-typings",
+    "@vitejs/plugin-react": "^4.7.0",
     "ammo.js": "github:kripken/ammo.js",
     "axios": "^1.11.0",
     "lucide": "^0.539.0",

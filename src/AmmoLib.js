@@ -59,7 +59,7 @@ function createConvexGeom(object) {
 }
 
 async function loadAmmo() {
-  const AmmoLib = await import("ammo.js/builds/ammo.js");
+  const AmmoLib = await import("ammo.js");
    Ammo = await AmmoLib.default();
   return Ammo;
 }
