@@ -7,6 +7,11 @@ plugins:[wasm() , topLevelAwait(),   tailwindcss(),],
  build: {
         sourcemap: true,
     },
+    ssr: {
+    noExternal: ['ammo.js'] 
+  },
+
+    
    assetsInclude: [
   '**/*.glb',
   '**/*.gltf',
