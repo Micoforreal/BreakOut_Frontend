@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { levelData, userData as userDataFromFile } from "./helpers/data";
 import xp from "./assets/xp.png";
 import gold from "./assets/gold.png";
-import WalletApp from "./WalletApp";
+
 import { _APP } from "./main";
 
 
-import { useWallet, WalletProvider } from "@solana/wallet-adapter-react";
+import { useWallet, } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { useAdmin } from "./honeyComb/useAdmin";
 import ProfileModal from "./components/ProfileModal";

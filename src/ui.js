@@ -7,9 +7,6 @@ import { createAccount } from "./honeyComb/user";
 import xp from "./assets/xp.png";
 import gold from "./assets/gold.png";
 
-import levelBadge from "./assets/levelBadge.png";
-
-import LockedLevelBadge from "./assets/lockedlevelBadge.png";
 
 const modal = document.getElementById("noticeModal");
 const closeBtn = document.getElementById("closeModalBtn");
