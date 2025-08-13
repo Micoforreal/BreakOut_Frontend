@@ -40,7 +40,7 @@ import ak47Shot from "./assets/sounds/ak47_shot.wav";
 
 import gun from "./assets/guns/basic_gun/scene.glb";
 
-import enemyBot from "./assets/enemy/Enemy_flying.fbx";
+import enemyBot from "./assets/enemy/Enemy_Flying.fbx";
 //Ammo box
 import ammobox from "./assets/ammo/AmmoBox.fbx";
 import ammoboxTexD from "./assets/ammo/AmmoBox_D.tga.png";
