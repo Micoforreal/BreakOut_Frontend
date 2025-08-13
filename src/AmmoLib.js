@@ -58,26 +58,36 @@ function createConvexGeom(object) {
   return geom;
 }
 
+async function loadAmmo() {
+  const AmmoLib = await import("ammo.js");
+   Ammo = await AmmoLib.default();
+  return Ammo;
+}
+
 class AmmoHelper {
   static async Init(callback = () => {}) {
 
 
-       if (typeof window === "undefined") {
-      // On Vercel's server side, just skip
-      return;
-    }
+    //    if (typeof window === "undefined") {
+    //   // On Vercel's server side, just skip
+    //   return;
+    // }
 
 
     
-    const _Ammo = await import("ammo.js"); // dynamically load module
-    Ammo = await _Ammo.default();
-    callback();
+    // const _Ammo = await import("ammo.js"); // dynamically load module
+    // Ammo = await _Ammo.default();
+    // callback();
+
 
     //   _Ammo().then((ammo)=>{
     //     Ammo = ammo;
     //     callback();
     // });
 
+    loadAmmo().then(Ammo => {
+  console.log("Ammo ready");
+});
 
     //     const AmmoModule = (await import("ammo.js")).default; // get the factory function
     // a = await AmmoModule(); // run it to get a mutable instance
