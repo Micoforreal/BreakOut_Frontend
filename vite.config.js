@@ -11,10 +11,7 @@ plugins:[wasm() , topLevelAwait(),   tailwindcss(),topLevelAwait()],
       external: ['ammo.js'],
     }
     },
-  //   ssr: {
-  // //   noExternal: ['ammo.js'] 
-  // // },
-
+ 
     
    assetsInclude: [
   '**/*.glb',
