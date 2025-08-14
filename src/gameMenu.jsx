@@ -19,11 +19,11 @@ import { userContext } from "./context/userContext";
 
 const GameMenu = () => {
 
-  const [selectedLevel, setSelectedLevel] = useState(null);
-  const [userLevel, setUserLevel] = useState(4);
+  const [selectedLevel, setSelectedLevel] = useState(1);
+  const [userLevel, setUserLevel] = useState(1);
   const [app, setApp] = useState(null);
   const gameAppRef = useRef(null);
-  const {showProfileModal,setShowProfilModal , userData} = useContext(userContext)
+  const {showProfileModal,setShowProfilModal , userData, start} = useContext(userContext)
   const { wallet, connected , publicKey:userPublicKey} = useWallet();
   const{ createProject}= useAdmin()
   
@@ -62,11 +62,11 @@ const GameMenu = () => {
    return (
     <>
 
+<ProfileModal />
       {userData ? (
         
         <div className="  h-full  flex flex-col">
 
-          <ProfileModal showProfileModal={showProfileModal} setShowProfilModal={setShowProfilModal}/>
           <div className="w-[93%] ms-auto flex justify-d items-center">
             <div className="w-[80%]" id="userData">
               {userData.map((item) => (

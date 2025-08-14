@@ -8,6 +8,7 @@ function ReactApp( ) {
         <SolanaWalletProvider>
         <UserContextProvider>
 
+         
             <GameMenu/>
         </UserContextProvider>
         </SolanaWalletProvider>

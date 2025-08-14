@@ -10,13 +10,15 @@ export const userContext = createContext({});
 export const UserContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userData, setUserData] = useState(null);
-  const { getUserProfile, addAchievement ,createCharacter } = useHoneyComb();
+  const { getUserProfile, addAchievement ,createCharacter,generateUserAuth } = useHoneyComb();
   const { connected, publicKey, wallet } = useWallet();
 
   const [showProfileModal, setShowProfilModal] = useState(false);
 
-  useEffect(() => {
-    const start = async () => {
+
+
+  
+   const start = async () => {
       try {
         if (connected) {
           const response = await getUserProfile();
@@ -25,26 +27,34 @@ export const UserContextProvider = ({ children }) => {
             setShowProfilModal(true);
           } else {
             setUserData(response);
-            // const res = await addAchievement(response[0].userAddress, 10);
 
-          //  const res = await createCharacter()
-          //   console.log(res);
-            // console.log(response);
+
+
+            
 
             
           }
+
+
+
+
+
         }
       } catch (error) {
         console.log(error);
       }
     };
 
+
+
+  useEffect(() => {
+   
     start();
-  }, [connected]);
+  }, [connected, wallet]);
 
   return (
     <userContext.Provider
-      value={{ showProfileModal, userData, setShowProfilModal }}
+      value={{ showProfileModal, userData, setShowProfilModal,start }}
     >
       {children}
     </userContext.Provider>

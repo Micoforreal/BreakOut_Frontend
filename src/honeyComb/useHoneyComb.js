@@ -13,6 +13,8 @@ import "toastify-js/src/toastify.css";
 import { id } from "zod/v4/locales";
 import { use } from "react";
 import axios from "axios";
+import { BN } from "bn.js";
+import base58 from "bs58";
 
 export const useHoneyComb = () => {
   const wallet = useWallet();
@@ -35,40 +37,38 @@ export const useHoneyComb = () => {
 
   const createAccount = async ({ fullName, user }) => {
     try {
-      const {
-        createNewUserWithProfileTransaction: txResponse, // This is the transaction response, you'll need to sign and send this transaction
-      } = await client.createNewUserWithProfileTransaction({
-        project: PROJECT_ADDRESS,
-        wallet: user.toString(),
-        profileIdentity: "main",
-        userInfo: {
-          name: fullName,
-          bio: "",
-          pfp: "",
-        },
+      // const response = await signAndSendTransaction(txResponse);
+      const response = await axios.post(`${BASE_URL}/createUserProfile`, {
+        userPublicKey: user,
+        fullName: fullName,
       });
 
-      const response = await signAndSendTransaction(txResponse);
 
-      Toastify({
-        text: "Account created successfully!",
-        duration: 3000,
-
-        newWindow: true,
-        close: true,
-
-        position: "right",
-        stopOnFocus: true,
-
-        style: {
-          borderRadius: "10px",
-
-          background: "linear-gradient(to right, #00b09b, #96c93d)",
-        },
-      }).showToast();
-
-      console.log("Transaction response:", response);
-      return response;
+      if (response.status === 200) {
+        
+        Toastify({
+          text: "Account created successfully!",
+          duration: 3000,
+          
+          newWindow: true,
+          close: true,
+          
+          position: "right",
+          stopOnFocus: true,
+          
+          style: {
+            borderRadius: "10px",
+            
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+          },
+          
+          
+        }).showToast();
+          return response.data;
+      }else{
+        throw new Error("error occured");
+        
+      }
     } catch (error) {
       console.error("Error creating account:", error);
       Toastify({
@@ -101,46 +101,73 @@ export const useHoneyComb = () => {
         })
         .then(({ user }) => user);
 
-      const characterArray = await client
-        .findCharacters({
-          addresses: [],
-          includeProof: true,
-          filters: {},
-          mints: [],
-          trees: [],
-          wallets: [userPublicKey.toString()], // Array of wallet public keys as a string (wallets that own the characters)
-          attributeHashes: [], // Array of attribute hashes as a string
-        })
-        .then(({ character }) => character);
+      if (users.length > 0) {
+        const characterArray = await client
+          .findCharacters({
+            addresses: [],
+            includeProof: true,
+            filters: {},
+            mints: [],
+            trees: [],
+            wallets: [userPublicKey.toString()], // Array of wallet public keys as a string (wallets that own the characters)
+            attributeHashes: [], // Array of attribute hashes as a string
+          })
+          .then(({ character }) => character);
 
-      const usersArray = await client
-        .findProfiles({
-          // All filters below are optional
-          userIds: [users[0].id],
-          projects: [PROJECT_ADDRESS], // String array of project addresses
-          addresses: [],
-          identities: [],
-          includeProof: true,
-        })
-        .then(({ profile }) => profile);
+        const usersArray = await client
+          .findProfiles({
+            userIds: [users[0].id],
+            projects: [PROJECT_ADDRESS], // String array of project addresses
+            addresses: [],
+            identities: [],
+            includeProof: true,
+          })
+          .then(({ profile }) => profile);
 
+        const userData = [
+          {
+            id: usersArray[0].id,
+            userAddress: usersArray[0].address,
+            fullName: usersArray[0].info.name,
+            xp: usersArray[0].platformData.xp,
+            characterAddress: characterArray[0].address,
+          },
+        ];
+
+        
+        
+        
+        
+        // const response =
+        
+        // await client.createSendCharactersOnMissionTransaction({
+          //     data: {
+            
+          //     userId:BN(846),
+          //         mission: "E7jVyKaiKYW3zEcyJQzrdmRukQXVvAT8W2ZquWrDnDnM".toString(),
+          //         characterAddresses: [
+            //          "GdGi7yorx1dyCXRWpkHy9rVf5KhvhTkEtEmTdu9mepr8"
+      //         ],
+      //         authority: "GyL6uX6dFrMhFr1tYMWrYnqNTv4UgPTcYfT9YydcUsTv".toString(),
+      
+      //             // payer: adminPublicKey.toString(), // Optiona
+      
+      //       }
+      
+      //     });
+      
       console.log(usersArray);
+      
+      console.log(users)
+      
+      console.log(characterArray)
 
-      if (usersArray.length === 0) {
+      
+        return userData;
+    }
+      if (users.length === 0) {
         return "No user found";
       }
-
-      const userData = [
-        {
-          id: usersArray[0].id,
-          userAddress: usersArray[0].address,
-          fullName: usersArray[0].info.name,
-          xp: usersArray[0].platformData.xp,
-          characterAddress: characterArray[0].address,
-        },
-      ];
-
-      return userData;
     } catch (error) {
       console.error("Error fetching user profile:", error);
       Toastify({
@@ -213,13 +240,37 @@ export const useHoneyComb = () => {
     return response;
   };
 
+  const sendPlayerOnMission = async () => {};
 
-  const sendPlayerOnMission = async ()=>{
+
+
+  const generateUserAuth = async () => {
+
+        const { 
+      authRequest: { message: authRequest } 
+    } = await client.authRequest({
+      wallet:userPublicKey
+    });
+    
+    const encodedMessage = new TextEncoder().encode(authRequest);
+    // Sign the message
+    const signedUIntArray = await wallet.signMessage(encodedMessage);
+    // Convert the signed message into a base58 encoded string
+    const signature = base58.encode(signedUIntArray);
+    // Send the signed message to the server
+    const { authConfirm } = await client.authConfirm({ wallet: userPublicKey.toString(), signature });
+
+
+   return {
+    auth:authConfirm
+   }
+    
     
   }
   // file link
 
   return {
+    generateUserAuth,
     createAccount,
     getUserProfile,
     addAchievement,
