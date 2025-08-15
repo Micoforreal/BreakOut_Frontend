@@ -1,4 +1,3 @@
-
 import * as THREE from "three";
 import { AmmoHelper, Ammo, createConvexHullShape } from "./AmmoLib";
 import EntityManager from "./EntityManager";
@@ -14,6 +13,7 @@ import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { SkeletonUtils } from "three/examples/jsm/utils/SkeletonUtils";
 import NpcCharacterController from "./entities/NPC/CharacterController";
 import Input from "./Input";
+import { Pathfinding } from "three-pathfinding";
 
 import level from "./assets/level.glb";
 import navmesh from "./assets/navmesh.obj";
@@ -29,7 +29,6 @@ import ak47 from "./assets/guns/ak47/ak47.glb";
 import muzzleFlash from "./assets/muzzle_flash.glb";
 //Shot sound
 import ak47Shot from "./assets/sounds/ak47_shot.wav";
-
 
 //Ammo box
 import ammobox from "./assets/ammo/AmmoBox.fbx";
@@ -54,14 +53,17 @@ import UIManager from "./entities/UI/UIManager";
 import AmmoBox from "./entities/AmmoBox/AmmoBox";
 import LevelBulletDecals from "./entities/Level/BulletDecals";
 import PlayerHealth from "./entities/Player/PlayerHealth";
-import menuMusicFile from './assets/sounds/menuMusic.mp3';
+import menuMusicFile from "./assets/sounds/menuMusic.mp3";
 
-
-  export class FPSGameApp {
+export class FPSGameApp {
   constructor() {
     this.lastFrameTime = null;
     this.assets = {};
     this.animFrameId = 0;
+    this.isPaused = false;
+    this.isGameRunning = false;
+    this.gameState = "menu"; // 'menu', 'playing', 'paused'
+    this.savedGameData = null; // For storing game state when paused
 
     AmmoHelper.Init(() => {
       this.Init();
@@ -72,6 +74,7 @@ import menuMusicFile from './assets/sounds/menuMusic.mp3';
     this.LoadAssets();
     this.SetupGraphics();
     this.SetupStartButton();
+    this.SetupPauseQuitControls()
   }
 
   SetupGraphics() {
@@ -102,6 +105,33 @@ import menuMusicFile from './assets/sounds/menuMusic.mp3';
     // Stats.js
     this.stats = new Stats();
     document.body.appendChild(this.stats.dom);
+  }
+
+  GetRandomNavmeshPoint() {
+    const navmeshObj = this.assets["navmesh"];
+
+    const navmeshGeometry = navmeshObj.children[0].geometry;
+    const pathfinding = new Pathfinding();
+    const zone = Pathfinding.createZone(navmeshGeometry);
+    pathfinding.setZoneData("level", zone);
+
+    // Pick a group
+    const groupID = pathfinding.getGroup("level", new THREE.Vector3(0, 0, 0));
+
+    // Get nodes for that group
+    const nodes = zone.groups[groupID];
+    if (!nodes || nodes.length === 0) {
+      console.warn("No nodes found in navmesh group.");
+      return null;
+    }
+
+    // Pick a random node
+    const randomNode = nodes[Math.floor(Math.random() * nodes.length)];
+
+    // Pick the node’s centroid (or later, a random point in polygon)
+    const randomPos = randomNode.centroid.clone();
+
+    return randomPos;
   }
 
   SetupPhysics() {
@@ -160,6 +190,31 @@ import menuMusicFile from './assets/sounds/menuMusic.mp3';
     this.OnProgress(0);
   }
 
+
+  
+  SetupPauseQuitControls() {
+    // Add keyboard event listener for pause/quit
+    document.addEventListener('keydown', (event) => {
+      if (this.gameState === 'playing') {
+        if (event.code === 'Escape' || event.code === 'KeyP') {
+          event.preventDefault();
+          this.Pause();
+        } else if (event.code === 'KeyQ' && event.ctrlKey) {
+          event.preventDefault();
+          this.Quit();
+        }
+      } else if (this.gameState === 'paused') {
+        if (event.code === 'Escape' || event.code === 'KeyP') {
+          event.preventDefault();
+          this.Resume();
+        } else if (event.code === 'KeyQ' && event.ctrlKey) {
+          event.preventDefault();
+          this.Quit();
+        }
+      }
+    });
+  }
+
   SetupStartButton() {
     // document
     //   .getElementById("start_game")
@@ -171,21 +226,23 @@ import menuMusicFile from './assets/sounds/menuMusic.mp3';
       ? "visible"
       : "hidden";
 
-
-
-      document.addEventListener("click", () => {
-    if (!this.menuMusic) {
-      this.menuMusic =  new THREE.Audio(this.listener);
-      this.menuMusic.setBuffer(this.assets['menuMusic']);
-      this.menuMusic.setLoop(true);
-      this.menuMusic.setVolume(0.5);
-      this.menuMusic.play();
-      this.menuMusic.isPlaying = true;
-    }
-  })
-  
+    document.addEventListener("click", () => {
+      if (!this.menuMusic) {
+        this.menuMusic = new THREE.Audio(this.listener);
+        this.menuMusic.setBuffer(this.assets["menuMusic"]);
+        this.menuMusic.setLoop(true);
+        this.menuMusic.setVolume(0.5);
+        this.menuMusic.play();
+        this.menuMusic.isPlaying = true;
+      }
+    });
   }
 
+  ShowPauseMenu(visible = true) {
+    let pauseMenu = document.getElementById("pause_menu");
+
+    pauseMenu.style.visibility = visible ? "visible" : "hidden";
+  }
 
   async LoadAssets() {
     const gltfLoader = new GLTFLoader();
@@ -313,13 +370,19 @@ import menuMusicFile from './assets/sounds/menuMusic.mp3';
 
     const npcLocations = [
       [10.8, 0.0, 22.0],
-
-      // [9.0, 0.0, 20.0]
+      [9.8, 0.0, 20.0],
     ];
 
     npcLocations.forEach((v, i) => {
       const npcEntity = new Entity();
-      npcEntity.SetPosition(new THREE.Vector3(v[0], v[1], v[2]));
+      const position = this.GetRandomNavmeshPoint();
+      if (position) {
+        npcEntity.SetPosition(
+          new THREE.Vector3(position.x, position.y, position.z)
+        );
+      } else {
+        npcEntity.SetPosition(new THREE.Vector3(v[0], v[1], v[2]));
+      }
       npcEntity.SetName(`Mutant${i}`);
       npcEntity.AddComponent(
         new NpcCharacterController(
@@ -368,12 +431,12 @@ import menuMusicFile from './assets/sounds/menuMusic.mp3';
     );
   }
 
-  StartGame = () => {
+  StartGame = (level) => {
     window.cancelAnimationFrame(this.animFrameId);
     Input.ClearEventListners();
 
     // if (this.menuMusic && this.menuMusic.isPlaying) {
-      this.menuMusic.stop();
+    this.menuMusic.stop();
     // }
 
     //Create entities and physics
@@ -381,7 +444,98 @@ import menuMusicFile from './assets/sounds/menuMusic.mp3';
     this.SetupPhysics();
     this.EntitySetup();
     this.ShowMenu(false);
+
+    this.gameState = "playing";
+    this.isGameRunning = true;
+    this.isPaused = false;
+
+
+    console.log(this.gameState)
   };
+
+  Pause() {
+    if (this.gameState !== "playing") return;
+
+    this.isPaused = true;
+    this.gameState = "paused";
+
+    // Stop the animation frame
+    window.cancelAnimationFrame(this.animFrameId);
+
+    // Show pause menu
+    this.ShowPauseMenu(true);
+
+    // Pause any game sounds/music if needed
+    // You can add logic here to pause game audio
+
+    console.log("Game Paused");
+  }
+
+  Resume() {
+    if (this.gameState !== "paused") return;
+
+    this.isPaused = false;
+    this.gameState = "playing";
+
+    // Hide pause menu
+    this.ShowPauseMenu(false);
+
+    // Reset frame time to prevent large delta on resume
+    this.lastFrameTime = null;
+
+    // Resume animation frame
+    this.animFrameId = window.requestAnimationFrame(
+      this.OnAnimationFrameHandler
+    );
+
+    // Resume any game sounds/music if needed
+    // You can add logic here to resume game audio
+
+    console.log("Game Resumed");
+  }
+
+  Quit() {
+    // Stop animation frame
+    window.cancelAnimationFrame(this.animFrameId);
+
+    // Clear input listeners
+    if (Input.ClearEventListners) {
+      Input.ClearEventListners();
+    }
+
+    // Stop all audio
+    if (this.menuMusic && this.menuMusic.isPlaying) {
+      this.menuMusic.stop();
+    }
+
+    // Clean up physics world if it exists
+    if (this.physicsWorld) {
+      // Add physics cleanup logic here if needed
+      this.physicsWorld = null;
+    }
+
+    // Clear the scene
+    if (this.scene) {
+      this.scene.clear();
+    }
+
+    // Reset game state
+    this.gameState = "menu";
+    this.isGameRunning = false;
+    this.isPaused = false;
+    this.lastFrameTime = null;
+
+    // Hide pause menu and show main menu
+    this.ShowPauseMenu(false);
+    this.ShowMenu(true);
+
+    // Clear entity manager
+    if (this.entityManager) {
+      this.entityManager = null;
+    }
+
+    console.log("Game Quit - Returned to Menu");
+  }
 
   // resize
   WindowResizeHanlder = () => {
@@ -393,6 +547,10 @@ import menuMusicFile from './assets/sounds/menuMusic.mp3';
 
   // render loop
   OnAnimationFrameHandler = (t) => {
+    if (this.isPaused || this.gameState !== "playing") {
+      return;
+    }
+
     if (this.lastFrameTime === null) {
       this.lastFrameTime = t;
     }

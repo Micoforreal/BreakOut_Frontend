@@ -28,6 +28,10 @@ export default class UIManager extends Component{
 
     }
 
+    SetDeathUi(){
+     document.getElementById("death_screen").style.visibility = 'visible';
+    }
+
     Initialize(){
         document.getElementById("game_hud").style.visibility = 'visible';
     }

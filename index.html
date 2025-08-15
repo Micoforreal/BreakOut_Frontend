@@ -80,7 +80,7 @@
       h1 {
         /* font-family: "Libre Barcode 39 Text", cursive; */
         font-size: 4em;
-        }
+      }
       /* button{
         background-color: rgba(0,0,0,0);
         color: rgb(221, 221, 221);
@@ -94,6 +94,59 @@
         position: absolute;
         right: 5%;
         top: 5%;
+      }
+
+
+      #pause_menu
+      {
+
+           position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        background-color: rgba(0, 0, 0, 0.6);
+
+          z-index: 9999;
+
+
+        visibility: hidden; 
+     
+
+      }
+
+     #pause_btn { position: absolute;
+        bottom: 8%;
+        left: 1%;
+        width: 18%;
+        height: 2%;
+        border: 1px solid #ffffff;
+      }
+
+      #death_screen {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        background-color: rgba(0, 0, 0, 0.6);
+
+          z-index: 9999;
+
+
+        visibility: hidden; 
       }
 
       #hit_blood {
@@ -157,42 +210,13 @@
             </h2>
           </div>
 
-          <div class="mt-4">
-            <p class="text-pretty text-white">
-              Please turn on hardware acceleration on your computer for better
-              game performance
-            </p>
-          </div>
-          <button
-            type="button"
-            id="closeModalBtn"
-            class="border-amber-400 border mt-4 rounded-lg p-2 text-gray-200 transition-colors hover:bg-gray-50 hover:text-gray-600 focus:outline-none"
-            aria-label="Close"
-          >
-            Ok
-          </button>
-        </div>
-      </div>
-
-      
-      <div
-        id="userLevel"
-        class="flex gap-14 flex-wrap w-[80%] justify-center m-auto"
-      ></div>
-
-      <div class="flex mt-auto justify-between items-center">
-        <button id="" class="ms-7 md:px-10 py-2 px-4 bg-gray-200 text-blue-950 rounded-lg ">Store</button>
-
-       
-
-        <h1 class="mx-auto border-">OutBreak</h1>
-        <button id="start_game" class="ms-a me-7 md:px-7 py-2 px-4">
-          START GAME
-        </button>
+          
       </div> -->
     </div>
     <div id="game_hud">
       <img id="crosshair" src="./src/ui/crosshair.png" />
+      
+      <button id="pause_btn">eeeeeeeeeeeeeeee</button>
       <div id="ammo_container">
         <span id="current_ammo">0</span>
         <span>|</span>
@@ -205,7 +229,56 @@
       <div id="hit_blood" class="fade">
         <img id="blood_img" src="./src/assets/hit_blood.png" />
       </div>
+
+      <div id="death_screen" class="">
+        <img id="blood_img" src="./src/assets/hit_blood.png" />
+        <div class="absolute">
+          <h2 class="font-bold text-4xl">Mission Failed</h2>
+
+          <div class="flex flex-col my-30 gap-y-10">
+            <button
+              id="replay_btn"
+              class="py-3 px-7 border rounded-4xl hover:bg-amber-950 hover:border-amber-950"
+            >
+              <i class="fa fa-repeat me-4"></i> Replay
+            </button>
+
+            <button
+              id="back_to_lobby_btn"
+              class="py-3 px-7 border rounded-4xl hover:bg-amber-950 hover:border-amber-950"
+            >
+              <i class="fa fa-home me-4"></i>Back to Lobby
+            </button>
+          </div>
+        </div>
+      </div>
+
+
+
+
+      <div id="pause_menu" class="">
+           <div class="absolute">
+          <h2 class="font-bold text-4xl">Paused</h2>
+
+          <div class="flex flex-col my-30 gap-y-10">
+            <button
+              id="replay_btn"
+              class="py-3 px-7 border rounded-4xl hover:bg-amber-950 hover:border-amber-950"
+            >
+              <i class=" me-4"></i> Continue
+            </button>
+
+            <button
+              id="back_to_lobby_btn"
+              class="py-3 px-7 border rounded-4xl hover:bg-amber-950 hover:border-amber-950"
+            >
+              <i class="me-4"></i>Quite
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
+
     <div id="progress"></div>
     <my-app></my-app>
   </body>
