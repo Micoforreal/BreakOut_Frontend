@@ -38,7 +38,7 @@ export const useHoneyComb = () => {
   const createAccount = async ({ fullName, user }) => {
     try {
       // const response = await signAndSendTransaction(txResponse);
-      const response = await axios.post(`${BASE_URL}/createUserProfile`, {
+      const response = await axios.post(`${BASE_URL}/user/createProfile`, {
         userPublicKey: user,
         fullName: fullName,
       });
@@ -90,84 +90,35 @@ export const useHoneyComb = () => {
     }
   };
 
-  const getUserProfile = async () => {
+  const getUserProfile = async (publicKey) => {
+
+
     try {
-      const users = await client
-        .findUsers({
-          wallets: [userPublicKey.toString()], // String array of users' wallet addresses
-          addresses: [],
-          ids: [],
-          includeProof: true,
-        })
-        .then(({ user }) => user);
+      
+    
+    
+    const response = await axios.post(`${BASE_URL}/user/fetchProfile`, {
+        userPublicKey: publicKey,
 
-      if (users.length > 0) {
-        const characterArray = await client
-          .findCharacters({
-            addresses: [],
-            includeProof: true,
-            filters: {},
-            mints: [],
-            trees: [],
-            wallets: [userPublicKey.toString()], // Array of wallet public keys as a string (wallets that own the characters)
-            attributeHashes: [], // Array of attribute hashes as a string
-          })
-          .then(({ character }) => character);
+      });
 
-        const usersArray = await client
-          .findProfiles({
-            userIds: [users[0].id],
-            projects: [PROJECT_ADDRESS], // String array of project addresses
-            addresses: [],
-            identities: [],
-            includeProof: true,
-          })
-          .then(({ profile }) => profile);
 
-        const userData = [
-          {
-            id: usersArray[0].id,
-            userAddress: usersArray[0].address,
-            fullName: usersArray[0].info.name,
-            xp: usersArray[0].platformData.xp,
-            characterAddress: characterArray[0].address,
-          },
-        ];
 
-        
-        
-        
-        
-        // const response =
-        
-        // await client.createSendCharactersOnMissionTransaction({
-          //     data: {
-            
-          //     userId:BN(846),
-          //         mission: "E7jVyKaiKYW3zEcyJQzrdmRukQXVvAT8W2ZquWrDnDnM".toString(),
-          //         characterAddresses: [
-            //          "GdGi7yorx1dyCXRWpkHy9rVf5KhvhTkEtEmTdu9mepr8"
-      //         ],
-      //         authority: "GyL6uX6dFrMhFr1tYMWrYnqNTv4UgPTcYfT9YydcUsTv".toString(),
-      
-      //             // payer: adminPublicKey.toString(), // Optiona
-      
-      //       }
-      
-      //     });
-      
-      console.log(usersArray);
-      
-      console.log(users)
-      
-      console.log(characterArray)
+      console.log(response)
+      if(response.status === 200 && response.data.message=== "No user found")
+      {
 
-      
+        return "No user found"                  
+      }else{
+        const userData =response.data.user
+        
         return userData;
-    }
-      if (users.length === 0) {
-        return "No user found";
       }
+
+
+    
+  
+     
     } catch (error) {
       console.error("Error fetching user profile:", error);
       Toastify({
@@ -232,8 +183,25 @@ export const useHoneyComb = () => {
     }
   };
 
+  const updateLevel = async (publicKey, level) => {
+
+    try {
+      
+      const response = await axios.post(`${BASE_URL}/user/updateLevel`, {
+        level:level,
+        userPublicKey: publicKey
+      });
+      
+      
+      return response.data;
+    } catch (error) {
+     console.log(error) 
+    }
+    
+  }
+
   const createCharacter = async () => {
-    const response = await axios.post(`${BASE_URL}/userCharacter`, {
+    const response = await axios.post(`${BASE_URL}/user/getCharacter`, {
       userPublicKey: userPublicKey.toString(),
     });
 
@@ -260,9 +228,13 @@ export const useHoneyComb = () => {
     // Send the signed message to the server
     const { authConfirm } = await client.authConfirm({ wallet: userPublicKey.toString(), signature });
 
+     const {data} = await axios.post(`${BASE_URL}/user/recieveUserAuth`, {
+      auth: authConfirm,
+    });
+
 
    return {
-    auth:authConfirm
+    auth:data
    }
     
     
@@ -270,6 +242,7 @@ export const useHoneyComb = () => {
   // file link
 
   return {
+    updateLevel,
     generateUserAuth,
     createAccount,
     getUserProfile,

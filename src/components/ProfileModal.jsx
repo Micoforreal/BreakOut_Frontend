@@ -13,10 +13,12 @@ const formSchema = z.object({
 });
 
 const ProfileModal = () => {
-  const { setUserData, start, showProfileModal, setShowProfilModal } =useContext(userContext);
+  const { setUserData, start, showProfileModal, setShowProfilModal,setIsLoading } =
+    useContext(userContext);
   const { connected, publicKey } = useWallet();
 
-  const { createAccount, createCharacter, getUserProfile, generateUserAuth } = useHoneyComb();
+  const { createAccount, createCharacter, getUserProfile, generateUserAuth, updateLevel } =
+    useHoneyComb();
   const {
     control,
     handleSubmit,
@@ -30,21 +32,29 @@ const ProfileModal = () => {
   });
 
   const onSubmit = async (data) => {
-    if (connected === true) {
-      const response = await createAccount({
-        fullName: data.fullName,
-        user: publicKey,
-      });
+    setIsLoading(true)
+    try {
+      
+      if (connected === true) {
+        const response = await createAccount({
+          fullName: data.fullName,
+          user: publicKey,
+        });
 
-      if (response) {
-        await createCharacter();
-
-       const auth= await generateUserAuth()
-
-
-        await setUserData(response);
+        if (response) {
+          await createCharacter();
+          
+          await generateUserAuth(publicKey);
+          await updateLevel(publicKey, 1)
+          
+        }
+        start();
+        setShowProfilModal(false);
       }
-      setShowProfilModal(false);
+    } catch (error) {
+      
+    }finally{
+      setIsLoading(false)
     }
   };
 

@@ -43,7 +43,6 @@ export default class Weapon extends Component {
   }
 
   SetAnimations() {
-    console.log(this.camera);
     this.mixer = new THREE.AnimationMixer(this.model);
     this.SetAnim("idle", this.model.animations[1]);
     this.SetAnim("reload", this.model.animations[2]);

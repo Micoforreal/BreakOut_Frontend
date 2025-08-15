@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { levelData, userData as userDataFromFile } from "./helpers/data";
+import { levelData } from "./helpers/data";
 import xp from "./assets/xp.png";
 import gold from "./assets/gold.png";
 
@@ -8,9 +8,10 @@ import { _APP } from "./main";
 
 import { useWallet, } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
-import { useAdmin } from "./honeyComb/useAdmin";
+
 import ProfileModal from "./components/ProfileModal";
 import { userContext } from "./context/userContext";
+import Loading from "./components/Loading";
 
 
 
@@ -24,26 +25,23 @@ const GameMenu = () => {
   const [app, setApp] = useState(null);
   const gameAppRef = useRef(null);
   const {showProfileModal,setShowProfilModal , userData, start} = useContext(userContext)
-  const { wallet, connected , publicKey:userPublicKey} = useWallet();
-  const{ createProject}= useAdmin()
-  
-  
+
   useEffect(() => {
       // Simulate fetching from DB
-      const fetchUserData = async () => {
-          
-
-          // setSelectedLevel(data[0]?.currentLevel ?? null);
-        };
-        
-        fetchUserData();
+   
+          if (userData) {
+            
+            setSelectedLevel( userData[0].level ||1);
+          }
+   
+     
         
         gameAppRef.current = _APP;
 
         console.log(userData)
         
         
-    }, []);
+    }, [userData]);
     
     
     
@@ -63,6 +61,7 @@ const GameMenu = () => {
     <>
 
 <ProfileModal />
+  
       {userData ? (
         
         <div className="  h-full  flex flex-col">
@@ -107,7 +106,7 @@ const GameMenu = () => {
             {/* Level Selection */}
             <div className="flex gap-7 lg:w-[70%] m-auto justify-center flex-wrap">
               {levelData.map((item) => {
-                const isUnlocked = userLevel >= item.level;
+                const isUnlocked = userData[0].level >= item.level;
                 const isSelected = selectedLevel === item.level;
 
                 return (

@@ -3,12 +3,13 @@ import GameMenu from "./gameMenu";
 import SolanaWalletProvider from "./walletApp";
 import { UserContextProvider } from "./context/userContext";
 
+
 function ReactApp( ) {
     return(
         <SolanaWalletProvider>
         <UserContextProvider>
 
-         
+       
             <GameMenu/>
         </UserContextProvider>
         </SolanaWalletProvider>

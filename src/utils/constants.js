@@ -11,7 +11,7 @@ export const PROJECT_ADDRESS = "8Myc9f4fBVT3MNPobuV4CssNBBBDD5jmhzguwvArrZAY";
 export const ADMIN_PUBLIC_KEY = "GyL6uX6dFrMhFr1tYMWrYnqNTv4UgPTcYfT9YydcUsTv"
 
 
-export const BASE_URL = "http://localhost:8000"
+export const BASE_URL = "https://breakout-backend.onrender.com"
 
 export const CHARACTER_ASSEMBLER_ADDRESS = "FXoeEU1T6FCP7SSNNGVbKjkkaPCngU9e4i2fWxw2fzM8";
 
