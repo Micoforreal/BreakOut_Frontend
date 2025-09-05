@@ -33,8 +33,7 @@ const GameMenu = () => {
             
             setSelectedLevel( userData[0].level ||1);
           }
-   
-    
+  
         gameAppRef.current = _APP;
 
         console.log(userData)
