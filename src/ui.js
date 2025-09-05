@@ -13,7 +13,7 @@ const pauseBtn = document.getElementById("pause_btn");
 
 
 
-pauseBtn.addEventListener("click", () => {
+pauseBtn.addEvetListener("click", () => {
   
   _APP.Pause()
   
